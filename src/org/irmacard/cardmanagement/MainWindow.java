@@ -34,6 +34,10 @@ public class MainWindow {
 	 * @wbp.nonvisual location=742,219
 	 */
 	private final CredentialDetailView credentialDetailView = new CredentialDetailView();
+	/**
+	 * @wbp.nonvisual location=749,309
+	 */
+	private final LogDetailView logDetailView = new LogDetailView();
 
 	/**
 	 * Launch the application.
@@ -134,7 +138,9 @@ public class MainWindow {
 		listCredentials.setModel(credListModel);
 		
 		JLabel lblNothingSelected = new JLabel(BUNDLE.getString("MainWindow.lblNothinSelected.text"));
-		splitPaneVert.setRightComponent(lblNothingSelected);
+		//splitPaneVert.setRightComponent(lblNothingSelected);
+		logDetailView.setLogEntry(new LogEntry(new Date(), Action.ISSUE, (short)5, (short)5));
+		splitPaneVert.setRightComponent(logDetailView);
 	}
 
 }
