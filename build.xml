@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="IRMA personalisation application" default="all">
+  
+  <property file="build.properties" />
+
+  <path id="classpath">
+    <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="clean">
+    <delete dir="${bin.dir}" />
+  </target>
+
+  <target name="distclean" depends="clean">
+    <delete file="${jar.application.dir}/${jar.application.archive}" />
+    <delete file="${jar.development.dir}/${jar.development.archive}" />
+    <delete file="${jar.source.dir}/${jar.source.archive}" />
+  </target>
+
+  <target name="compile">
+    <mkdir dir="${bin.dir}" />
+    <javac srcdir="${src.dir}" destdir="${bin.dir}" includeantruntime="false">
+       <classpath refid="classpath" />
+    </javac>
+    <copy todir="${bin.dir}">
+      <fileset dir="${src.dir}" includes="**/*.properties" />
+    </copy>
+  </target>
+
+  <target name="archive">
+    <jar destfile="${jar.source.dir}/${jar.source.archive}">
+      <fileset dir="${src.dir}" />
+    </jar>
+  </target>
+
+  <target name="development" depends="compile">
+    <jar destfile="${jar.development.dir}/${jar.development.archive}">
+      <fileset dir="${bin.dir}" />
+      <fileset dir="${src.dir}" />
+    </jar>
+  </target>
+
+  <target name="application" depends="compile">
+    <jar destfile="${jar.application.dir}/${jar.application.archive}">
+        
+      <manifest>
+        <attribute name="Main-Class" value="${jar.application.run}"/>
+        <attribute name="Class-Path" value="."/>
+      </manifest>
+                
+      <fileset dir="${bin.dir}" />
+      <fileset dir="${resource.dir}" />
+      <zipfileset excludes="META-INF/*.SF" src="lib/bcprov-jdk15on-147.jar" />
+      <zipfileset excludes="META-INF/*.SF" src="lib/credentials_api.dev.jar" />
+      <zipfileset excludes="META-INF/*.SF" src="lib/scuba.dev.jar" />
+      <zipfileset excludes="META-INF/*.SF" src="lib/idemix_library.dev.jar" />
+      <zipfileset excludes="META-INF/*.SF" src="lib/idemix_terminal.dev.jar" />
+    </jar>
+  </target>
+  
+  <target name="all" depends="application,archive,development" />
+</project>
