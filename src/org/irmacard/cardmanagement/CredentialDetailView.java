@@ -8,7 +8,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import credentials.Attributes;
+import org.irmacard.credentials.Attributes;
 
 public class CredentialDetailView extends JPanel {
 	private static final Object[] COLUMN_NAMES = new Object[]{"Attribute", "Value"};

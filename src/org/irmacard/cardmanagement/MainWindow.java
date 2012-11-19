@@ -18,13 +18,15 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.ListCellRenderer;
 
-import credentials.Attributes;
-import credentials.util.LogEntry;
-import credentials.util.LogEntry.Action;
+import org.irmacard.credentials.Attributes;
+import org.irmacard.credentials.util.LogEntry;
+import org.irmacard.credentials.util.LogEntry.Action;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+
+import net.sourceforge.scuba.smartcards.CardService;
 
 public class MainWindow {
 	private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("org.irmacard.cardmanagement.messages"); //$NON-NLS-1$
@@ -39,26 +41,14 @@ public class MainWindow {
 	 */
 	private final LogDetailView logDetailView = new LogDetailView();
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainWindow window = new MainWindow();
-					window.frmCardManagement.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private CardService cardService;
 
 	/**
 	 * Create the application.
+	 * @param cardService 
 	 */
-	public MainWindow() {
+	public MainWindow(CardService cardService) {
+		this.cardService = cardService;
 		initialize();
 	}
 
@@ -141,6 +131,10 @@ public class MainWindow {
 		//splitPaneVert.setRightComponent(lblNothingSelected);
 		logDetailView.setLogEntry(new LogEntry(new Date(), Action.ISSUE, (short)5, (short)5));
 		splitPaneVert.setRightComponent(logDetailView);
+	}
+
+	public void show() {
+		frmCardManagement.setVisible(true);
 	}
 
 }

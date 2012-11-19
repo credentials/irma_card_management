@@ -24,8 +24,8 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.table.DefaultTableModel;
 
-import credentials.util.LogEntry;
-import credentials.util.LogEntry.Action;
+import org.irmacard.credentials.util.LogEntry;
+import org.irmacard.credentials.util.LogEntry.Action;
 
 public class LogDetailView extends JPanel {
 	private static final Object[] COLUMN_NAMES = new Object[]{"Attribute", "Value"};
