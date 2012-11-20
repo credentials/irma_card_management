@@ -2,6 +2,9 @@ package org.irmacard.cardmanagement;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.smartcardio.CardException;
 import javax.smartcardio.CardTerminal;
@@ -11,9 +14,14 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 
 import org.irmacard.chvservice.CardHolderVerificationService;
+import org.irmacard.chvservice.IPinVerificationListener;
+
+import service.IdemixService;
 
 import net.sourceforge.scuba.smartcards.CardEvent;
 import net.sourceforge.scuba.smartcards.CardManager;
@@ -30,12 +38,13 @@ import java.awt.event.WindowEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class WelcomeScreen extends JFrame implements CardTerminalListener, TerminalFactoryListener {
+public class WelcomeScreen extends JFrame implements CardTerminalListener, TerminalFactoryListener, IPinVerificationListener {
 	private static final long serialVersionUID = -1120906824335303913L;
 
 	private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("org.irmacard.cardmanagement.messages"); //$NON-NLS-1$
 
 	private JPanel contentPane;
+	private JLabel pinLabel;
 
 	private CardManager manager;
 
@@ -90,6 +99,11 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 		lblPlaceCard.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblPlaceCard, BorderLayout.SOUTH);
 		
+		pinLabel = new JLabel(BUNDLE.getString("WelcomeScreen.pinLabel.text")); //$NON-NLS-1$
+		pinLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		pinLabel.setVisible(false);
+		contentPane.add(pinLabel, BorderLayout.SOUTH);
+		
 		manager = CardManager.getInstance();
 		manager.addTerminalFactoryListener(this);
 		manager.addCardTerminalListener(this);
@@ -108,8 +122,10 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 		TerminalCardService service = (TerminalCardService)ce.getService();
 		
 		try {
-			service.open();
+			IdemixService idemix = new IdemixService(service);
+			idemix.open();
 			CardHolderVerificationService chv = new CardHolderVerificationService(service);
+			chv.addPinVerificationListener(this); 
 			int pinResponse;
 			do {
 				pinResponse = chv.verifyPIN();
@@ -141,5 +157,66 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 
 	public void cardTerminalRemoved(CardTerminalEvent cte) {
 		System.out.println("Terminal removed");
+	}
+
+	@Override
+	public String userPinRequest(Integer nr_tries_left) {
+		String pinText = "The server requests to authenticate your identity, enter PIN";
+		
+		if(nr_tries_left != null) {
+			pinText += " (" + nr_tries_left + " tries left):";
+		} else {
+			pinText += ":";
+		}
+		
+        String pinString = "";
+        boolean valid = false;
+        
+		JPasswordField pinField = new JPasswordField(4);
+		JLabel lab = new JLabel(pinText);
+
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridBagLayout());
+
+		GridBagConstraints cc = new GridBagConstraints();
+		cc.anchor = GridBagConstraints.WEST;
+		cc.insets = new Insets(10, 10, 10, 10);
+		cc.gridx = 0;
+		cc.gridy = 0;
+
+		panel.add(lab, cc);
+		cc.gridy++;
+		panel.add(pinField, cc);
+		
+		while (!valid) {
+			// ask for pin, inform the user
+			int result = JOptionPane.showConfirmDialog(null, panel, "PIN",
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+			pinString = new String(pinField.getPassword());
+			
+			if (result != 0) {
+				// User pressed cancel;
+				lab.setText("<html><font color=\"red\">Please enter a pin</font><br />"
+						+ pinText + "</html>");
+			} else if (pinString.length() != 4) {
+				lab.setText("<html><font color=\"red\">Pin should be 4 digits</font><br />"
+						+ pinText + "</html>");
+			} else {
+				valid = true;
+			}
+		}
+
+        return pinString;
+	}
+
+	@Override
+	public void pinPadPinRequired(Integer nr_tries_left) {
+		pinLabel.setVisible(true);
+	}
+
+	@Override
+	public void pinPadPinEntered() {
+		pinLabel.setVisible(false);
 	}
 }
