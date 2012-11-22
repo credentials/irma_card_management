@@ -1,24 +1,13 @@
 package org.irmacard.cardmanagement;
 
+import java.awt.SystemColor;
+
+import javax.swing.JEditorPane;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JEditorPane;
-
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.SystemColor;
-import javax.swing.SwingConstants;
-import java.awt.Component;
-import java.awt.GridLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.text.DateFormat;
-
 import javax.swing.SpringLayout;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -28,6 +17,7 @@ import org.irmacard.credentials.util.LogEntry;
 import org.irmacard.credentials.util.LogEntry.Action;
 
 public class LogDetailView extends JPanel {
+	private static final long serialVersionUID = 8578108047702235400L;
 	private static final Object[] COLUMN_NAMES = new Object[]{"Attribute", "Value"};
 	private JTable tableAttributes;
 	private JTable table;

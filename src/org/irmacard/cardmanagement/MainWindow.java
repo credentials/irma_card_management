@@ -1,32 +1,28 @@
 package org.irmacard.cardmanagement;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-
 import java.util.Date;
 import java.util.ResourceBundle;
-import javax.swing.JToolBar;
-import java.awt.BorderLayout;
 
-import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
-import javax.swing.JSplitPane;
-import javax.swing.JList;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JToolBar;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import net.sourceforge.scuba.smartcards.CardService;
 
 import org.irmacard.credentials.Attributes;
 import org.irmacard.credentials.util.LogEntry;
 import org.irmacard.credentials.util.LogEntry.Action;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
-
-import net.sourceforge.scuba.smartcards.CardService;
 
 public class MainWindow {
 	private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("org.irmacard.cardmanagement.messages"); //$NON-NLS-1$
