@@ -1,37 +1,37 @@
 package org.irmacard.cardmanagement;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import javax.swing.JFrame;
 
-import java.util.Date;
+
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JToolBar;
-import java.awt.BorderLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
+
 import javax.swing.DefaultListModel;
-import javax.swing.JSplitPane;
-import javax.swing.JList;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+
 import javax.swing.ListCellRenderer;
 
-import org.irmacard.credentials.Attributes;
 import org.irmacard.credentials.util.LogEntry;
 import org.irmacard.credentials.util.LogEntry.Action;
-
 import org.irmacard.credentials.idemix.IdemixCredentials;
-
 import org.irmacard.credentials.BaseCredentials;
 
+import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import net.sourceforge.scuba.smartcards.CardService;
+
 
 public class MainWindow implements CredentialSelector {
 	private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("org.irmacard.cardmanagement.messages"); //$NON-NLS-1$
