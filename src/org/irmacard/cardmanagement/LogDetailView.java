@@ -24,21 +24,29 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.table.DefaultTableModel;
 
+import org.irmacard.credentials.Attributes;
+import org.irmacard.credentials.BaseCredentials;
 import org.irmacard.credentials.util.LogEntry;
 import org.irmacard.credentials.util.LogEntry.Action;
 
 public class LogDetailView extends JPanel {
+	private static final long serialVersionUID = 8260302052925451249L;
 	private static final Object[] COLUMN_NAMES = new Object[]{"Attribute", "Value"};
 	private JTable tableAttributes;
 	private JTable table;
 	private JEditorPane lblTitle;
 	private JLabel lblTimestamp;
 	private short credential;
+	private BaseCredentials credentials;
+	private CredentialSelector credentialSelector;
 
 	/**
 	 * Create the panel.
 	 */
-	public LogDetailView() {
+	public LogDetailView(BaseCredentials credentials, CredentialSelector credentialSelector) {
+		this.credentials = credentials;
+		this.credentialSelector = credentialSelector;
+		
 		SpringLayout springLayout = new SpringLayout();
 		setLayout(springLayout);
 		
@@ -53,7 +61,7 @@ public class LogDetailView extends JPanel {
 			@Override
 			public void hyperlinkUpdate(HyperlinkEvent evt) {
 				if(evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-					JOptionPane.showMessageDialog(null, "Credential " + credential);
+					LogDetailView.this.credentialSelector.selectCredentialID(credential);
 				}
 			}
 		});
@@ -87,6 +95,9 @@ public class LogDetailView extends JPanel {
 		lblTimestamp.setText(log.getTimestamp().toString());
 		DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0);
 		table.setModel(tableModel);
-		//TODO:Tabel vullen
+		Attributes attributes = credentials.getAttributes(credential);
+		for(String attribute : attributes.getIdentifiers()) {
+			tableModel.addRow(new Object[]{attribute, attributes.get(attribute)});
+		}
 	}
 }

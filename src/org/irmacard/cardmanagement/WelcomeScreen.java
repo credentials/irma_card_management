@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.smartcardio.CardException;
+import javax.smartcardio.CardNotPresentException;
 import javax.smartcardio.CardTerminal;
 import javax.smartcardio.TerminalFactory;
 import javax.swing.JFrame;
@@ -138,7 +139,8 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 			else {
 				//TODO No tries left
 			}
-		} catch (CardServiceException e) {
+		}
+		catch (CardServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

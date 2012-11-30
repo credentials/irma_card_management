@@ -6,6 +6,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SpringLayout;
 import javax.swing.table.DefaultTableModel;
 
 import org.irmacard.credentials.Attributes;
@@ -20,14 +21,21 @@ public class CredentialDetailView extends JPanel {
 	 * Create the panel.
 	 */
 	public CredentialDetailView() {
-		setLayout(new BorderLayout(0, 0));
+		SpringLayout springLayout = new SpringLayout();
+		setLayout(springLayout);
 		
 		lblCredName = new JLabel();
 		lblCredName.setFont(new Font("Tahoma", Font.BOLD, 14));
-		add(lblCredName, BorderLayout.NORTH);
+		springLayout.putConstraint(SpringLayout.NORTH, lblCredName, 0, SpringLayout.NORTH, this);
+		springLayout.putConstraint(SpringLayout.WEST, lblCredName, 0, SpringLayout.WEST, this);
+		add(lblCredName);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		add(scrollPane, BorderLayout.CENTER);
+		springLayout.putConstraint(SpringLayout.NORTH, scrollPane, 0, SpringLayout.SOUTH, lblCredName);
+		springLayout.putConstraint(SpringLayout.WEST, scrollPane, 0, SpringLayout.WEST, this);
+		springLayout.putConstraint(SpringLayout.SOUTH, scrollPane, 0, SpringLayout.SOUTH, this);
+		springLayout.putConstraint(SpringLayout.EAST, scrollPane, 0, SpringLayout.EAST, this);
+		add(scrollPane);
 		
 		table = new JTable();
 		scrollPane.setViewportView(table);
