@@ -45,9 +45,9 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 	private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("org.irmacard.cardmanagement.messages"); //$NON-NLS-1$
 
 	private JPanel contentPane;
-	private JLabel pinLabel;
 
 	private CardManager manager;
+	private JLabel lblInfo;
 
 	/**
 	 * Launch the application.
@@ -96,14 +96,9 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 		lblIrmaLogo.setIcon(new ImageIcon(WelcomeScreen.class.getResource("/img/irma.png")));
 		contentPane.add(lblIrmaLogo, BorderLayout.CENTER);
 		
-		JLabel lblPlaceCard = new JLabel(BUNDLE.getString("WelcomeScreen.lblPlaceCard.text")); //$NON-NLS-1$
-		lblPlaceCard.setHorizontalAlignment(SwingConstants.CENTER);
-		contentPane.add(lblPlaceCard, BorderLayout.SOUTH);
-		
-		pinLabel = new JLabel(BUNDLE.getString("WelcomeScreen.pinLabel.text")); //$NON-NLS-1$
-		pinLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		pinLabel.setVisible(false);
-		contentPane.add(pinLabel, BorderLayout.SOUTH);
+		lblInfo = new JLabel(BUNDLE.getString("WelcomeScreen.lblInfo.placeCard")); //$NON-NLS-1$
+		lblInfo.setHorizontalAlignment(SwingConstants.CENTER);
+		contentPane.add(lblInfo, BorderLayout.SOUTH);
 		
 		manager = CardManager.getInstance();
 		manager.addTerminalFactoryListener(this);
@@ -214,11 +209,11 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 
 	@Override
 	public void pinPadPinRequired(Integer nr_tries_left) {
-		pinLabel.setVisible(true);
+		lblInfo.setText(BUNDLE.getString("WelcomeScreen.lblInfo.enterPin"));
 	}
 
 	@Override
 	public void pinPadPinEntered() {
-		pinLabel.setVisible(false);
+		lblInfo.setText(BUNDLE.getString("WelcomeScreen.lblInfo.placeCard"));
 	}
 }

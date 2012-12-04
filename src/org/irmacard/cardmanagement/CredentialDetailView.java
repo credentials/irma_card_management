@@ -10,12 +10,14 @@ import javax.swing.SpringLayout;
 import javax.swing.table.DefaultTableModel;
 
 import org.irmacard.credentials.Attributes;
+import org.irmacard.credentials.info.CredentialDescription;
 
 public class CredentialDetailView extends JPanel {
 	private static final Object[] COLUMN_NAMES = new Object[]{"Attribute", "Value"};
 	private static final long serialVersionUID = 1625933969087435098L;
 	private JTable table;
 	private JLabel lblCredName;
+	private JLabel lblCredDescription;
 
 	/**
 	 * Create the panel.
@@ -31,7 +33,6 @@ public class CredentialDetailView extends JPanel {
 		add(lblCredName);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		springLayout.putConstraint(SpringLayout.NORTH, scrollPane, 0, SpringLayout.SOUTH, lblCredName);
 		springLayout.putConstraint(SpringLayout.WEST, scrollPane, 0, SpringLayout.WEST, this);
 		springLayout.putConstraint(SpringLayout.SOUTH, scrollPane, 0, SpringLayout.SOUTH, this);
 		springLayout.putConstraint(SpringLayout.EAST, scrollPane, 0, SpringLayout.EAST, this);
@@ -39,11 +40,17 @@ public class CredentialDetailView extends JPanel {
 		
 		table = new JTable();
 		scrollPane.setViewportView(table);
+		
+		lblCredDescription = new JLabel();
+		springLayout.putConstraint(SpringLayout.NORTH, scrollPane, 0, SpringLayout.SOUTH, lblCredDescription);
+		springLayout.putConstraint(SpringLayout.NORTH, lblCredDescription, 0, SpringLayout.SOUTH, lblCredName);
+		add(lblCredDescription);
 
 	}
 
-	public void setCredential(short credID, Attributes attributes) {
-		lblCredName.setText("Credential " + credID);
+	public void setCredential(CredentialDescription credential, Attributes attributes) {
+		lblCredName.setText(credential.getName());
+		lblCredDescription.setText(credential.getDescription());
 		DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0);
 		table.setModel(tableModel);
 		for(String attribute : attributes.getIdentifiers()) {

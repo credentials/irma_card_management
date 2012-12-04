@@ -377,4 +377,9 @@ public class CardHolderVerificationService extends CardService {
 
         return s.toByteArray();
     }
+
+	@Override
+	public byte[] getATR() throws CardServiceException {
+		return service.getATR();
+	}
 }

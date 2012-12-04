@@ -15,6 +15,9 @@ import javax.swing.table.DefaultTableModel;
 
 import org.irmacard.credentials.Attributes;
 import org.irmacard.credentials.BaseCredentials;
+import org.irmacard.credentials.info.CredentialDescription;
+import org.irmacard.credentials.info.DescriptionStore;
+import org.irmacard.credentials.info.InfoException;
 import org.irmacard.credentials.util.LogEntry;
 import org.irmacard.credentials.util.LogEntry.Action;
 
@@ -25,9 +28,9 @@ public class LogDetailView extends JPanel {
 	private JTable table;
 	private JEditorPane lblTitle;
 	private JLabel lblTimestamp;
-	private short credential;
 	private BaseCredentials credentials;
 	private CredentialSelector credentialSelector;
+	private CredentialDescription credential;
 
 	/**
 	 * Create the panel.
@@ -50,7 +53,7 @@ public class LogDetailView extends JPanel {
 			@Override
 			public void hyperlinkUpdate(HyperlinkEvent evt) {
 				if(evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-					LogDetailView.this.credentialSelector.selectCredentialID(credential);
+					LogDetailView.this.credentialSelector.selectCredential(credential);
 				}
 			}
 		});
@@ -79,12 +82,17 @@ public class LogDetailView extends JPanel {
 	}
 	
 	public void setLogEntry(LogEntry log) {
-		credential = log.getCredential();
-		lblTitle.setText(String.format("<html>%s <a href=\"%2$d\">credential %2$d</a></html>", log.getAction() == Action.ISSUE ? "Issue" : "Verify", log.getCredential()));
+		try {
+			credential = DescriptionStore.getInstance().getCredentialDescription(log.getCredential());
+		} catch (InfoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		lblTitle.setText(String.format("<html>%s <a href=\"%d\">%s</a></html>", log.getAction() == Action.ISSUE ? "Issue" : "Verify", credential.getId(), credential.getName()));
 		lblTimestamp.setText(log.getTimestamp().toString());
 		DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0);
 		table.setModel(tableModel);
-		Attributes attributes = credentials.getAttributes(credential);
+		Attributes attributes = credentials.getAttributes(credential.getId());
 		for(String attribute : attributes.getIdentifiers()) {
 			tableModel.addRow(new Object[]{attribute, attributes.get(attribute)});
 		}

@@ -10,6 +10,8 @@ import java.util.ResourceBundle;
 import javax.swing.JToolBar;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.File;
+import java.net.URI;
 
 
 import javax.swing.DefaultListModel;
@@ -21,6 +23,9 @@ import javax.swing.ListCellRenderer;
 import org.irmacard.credentials.util.LogEntry;
 import org.irmacard.credentials.util.LogEntry.Action;
 import org.irmacard.credentials.idemix.IdemixCredentials;
+import org.irmacard.credentials.info.CredentialDescription;
+import org.irmacard.credentials.info.DescriptionStore;
+import org.irmacard.credentials.info.InfoException;
 import org.irmacard.credentials.BaseCredentials;
 
 import javax.swing.JList;
@@ -53,6 +58,8 @@ public class MainWindow implements CredentialSelector {
 	private JSplitPane splitPaneVert;
 
 	private DefaultListModel logListModel;
+
+	private DescriptionStore descriptions;
 
 	/**
 	 * Create the application.
@@ -97,14 +104,14 @@ public class MainWindow implements CredentialSelector {
 		listLog.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent evt) {
 				if(!evt.getValueIsAdjusting()){
-					selectLog(listLog.getSelectedIndex());
+					selectLogIndex(listLog.getSelectedIndex());
 				}
 			}
 		});
 		listLog.addFocusListener(new FocusListener(){
 			@Override
 			public void focusGained(FocusEvent arg0) {
-				selectLog(listLog.getSelectedIndex());
+				selectLogIndex(listLog.getSelectedIndex());
 			}
 
 			@Override
@@ -124,18 +131,10 @@ public class MainWindow implements CredentialSelector {
 			public Component getListCellRendererComponent(JList list,
 					Object value, int index, boolean isSelected, boolean cellHasFocus) {
 				LogEntry entry = (LogEntry)value;
-				JLabel label = new JLabel(entry.getTimestamp().toString() + ": " + (entry.getAction() == Action.ISSUE ? "Issue" : "Verify") + " credential " + entry.getCredential());
-		        if (isSelected) {
-		            label.setBackground(list.getSelectionBackground());
-		            label.setForeground(list.getSelectionForeground());
-		        } else {
-		        	label.setBackground(list.getBackground());
-		        	label.setForeground(list.getForeground());
-		        }
-		        label.setEnabled(list.isEnabled());
-		        label.setFont(list.getFont());
-		        label.setOpaque(true);
-		        return label;
+				CredentialDescription credential = descriptions.getCredentialDescription(entry.getCredential());
+				String string = entry.getTimestamp().toString() + ": " + (entry.getAction() == Action.ISSUE ? "Issue " : "Verify ") + credential.getName(); 
+				
+				return renderCell(string, isSelected, list);
 			}
 			
 		});
@@ -146,13 +145,13 @@ public class MainWindow implements CredentialSelector {
 		final JList listCredentials = new JList();
 		listCredentials.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent evt) {
-				selectCredential(listCredentials.getSelectedIndex());
+				selectCredentialIndex(listCredentials.getSelectedIndex());
 			}
 		});
 		listCredentials.addFocusListener(new FocusListener(){
 			@Override
 			public void focusGained(FocusEvent arg0) {
-				selectCredential(listCredentials.getSelectedIndex());
+				selectCredentialIndex(listCredentials.getSelectedIndex());
 			}
 
 			@Override
@@ -162,10 +161,26 @@ public class MainWindow implements CredentialSelector {
 		scrollPaneCredentials.setViewportView(listCredentials);
 		credListModel = new DefaultListModel();
 		List<Integer> credentials = baseCredentials.getCredentials();
-		for(Integer cred : credentials) {
-			credListModel.addElement(cred);
+		try {
+			URI core = new File(System.getProperty("user.dir")).toURI().resolve("irma_configuration/");
+			DescriptionStore.setCoreLocation(core);
+			descriptions = DescriptionStore.getInstance();
+			for(Integer cred : credentials) {
+				credListModel.addElement(descriptions.getCredentialDescription(cred.shortValue()));
+			}
+		} catch (InfoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		listCredentials.setModel(credListModel);
+		listCredentials.setCellRenderer(new ListCellRenderer(){
+			@Override
+			public Component getListCellRendererComponent(JList list,
+					Object value, int index, boolean isSelected, boolean cellHasFocus) {
+				CredentialDescription credential = (CredentialDescription)value;
+				return renderCell(credential.getName(), isSelected, list);
+			}
+		});
 		
 		JLabel lblNothingSelected = new JLabel(BUNDLE.getString("MainWindow.lblNothinSelected.text"));
 		splitPaneVert.setRightComponent(lblNothingSelected);
@@ -173,11 +188,26 @@ public class MainWindow implements CredentialSelector {
 		logDetailView = new LogDetailView(baseCredentials, this);
 	}
 
+	private JLabel renderCell(String text, boolean isSelected, JList list) {
+		JLabel label = new JLabel(text);
+        if (isSelected) {
+            label.setBackground(list.getSelectionBackground());
+            label.setForeground(list.getSelectionForeground());
+        } else {
+        	label.setBackground(list.getBackground());
+        	label.setForeground(list.getForeground());
+        }
+        label.setEnabled(list.isEnabled());
+        label.setFont(list.getFont());
+        label.setOpaque(true);
+        return label;
+	}
+	
 	/**
 	 * Shows the log with the given index in the logDetailView
 	 * @param index
 	 */
-	private void selectLog(int index) {
+	private void selectLogIndex(int index) {
 		logDetailView.setLogEntry((LogEntry) logListModel.getElementAt(index));
 		splitPaneVert.setRightComponent(logDetailView);
 	}
@@ -186,17 +216,18 @@ public class MainWindow implements CredentialSelector {
 	 * Shows the credential with the given index in the credentialDetailView
 	 * @param index
 	 */
-	private void selectCredential(int index) {
-		short id = ((Integer)credListModel.getElementAt(index)).shortValue();
-		selectCredentialID(id);
+	private void selectCredentialIndex(int index) {
+		//short id = ((Integer)credListModel.getElementAt(index)).shortValue();
+		CredentialDescription credential = (CredentialDescription)credListModel.getElementAt(index);
+		selectCredential(credential);
 	}
 	
 	/**
 	 * Shows the credential with the given id in the credentialDetailView
 	 * @param id
 	 */
-	public void selectCredentialID(short id) {
-		credentialDetailView.setCredential(id, baseCredentials.getAttributes(id));
+	public void selectCredential(CredentialDescription credential) {
+		credentialDetailView.setCredential(credential, baseCredentials.getAttributes(credential.getId()));
 		splitPaneVert.setRightComponent(credentialDetailView);
 	}
 	

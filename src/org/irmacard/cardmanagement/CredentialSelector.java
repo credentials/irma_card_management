@@ -1,5 +1,7 @@
 package org.irmacard.cardmanagement;
 
+import org.irmacard.credentials.info.CredentialDescription;
+
 public interface CredentialSelector {
-	void selectCredentialID(short index);
+	void selectCredential(CredentialDescription credential);
 }
