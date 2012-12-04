@@ -94,7 +94,7 @@ public class LogDetailView extends JPanel {
 		table.setModel(tableModel);
 		Attributes attributes = credentials.getAttributes(credential.getId());
 		for(String attribute : attributes.getIdentifiers()) {
-			tableModel.addRow(new Object[]{attribute, attributes.get(attribute)});
+			tableModel.addRow(new Object[]{attribute, new String(attributes.get(attribute))});
 		}
 	}
 }

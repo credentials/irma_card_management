@@ -54,7 +54,7 @@ public class CredentialDetailView extends JPanel {
 		DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0);
 		table.setModel(tableModel);
 		for(String attribute : attributes.getIdentifiers()) {
-			tableModel.addRow(new Object[]{attribute, attributes.get(attribute)});
+			tableModel.addRow(new Object[]{attribute, new String(attributes.get(attribute))});
 		}
 	}
 }
