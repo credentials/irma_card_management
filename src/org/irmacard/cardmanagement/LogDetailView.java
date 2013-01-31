@@ -1,10 +1,7 @@
 package org.irmacard.cardmanagement;
 
-import java.awt.SystemColor;
-
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -15,17 +12,16 @@ import javax.swing.table.DefaultTableModel;
 
 import org.irmacard.credentials.Attributes;
 import org.irmacard.credentials.BaseCredentials;
+import org.irmacard.credentials.info.AttributeDescription;
 import org.irmacard.credentials.info.CredentialDescription;
 import org.irmacard.credentials.info.DescriptionStore;
 import org.irmacard.credentials.info.InfoException;
 import org.irmacard.credentials.util.LogEntry;
 import org.irmacard.credentials.util.LogEntry.Action;
-import java.awt.Color;
 
 public class LogDetailView extends JPanel {
 	private static final long serialVersionUID = 8260302052925451249L;
-	private static final Object[] COLUMN_NAMES = new Object[]{"Attribute", "Value"};
-	private JTable tableAttributes;
+	private static final Object[] COLUMN_NAMES = new Object[]{"Attribute", "Value", "Description"};
 	private JTable table;
 	private JEditorPane lblTitle;
 	private JLabel lblTimestamp;
@@ -85,17 +81,17 @@ public class LogDetailView extends JPanel {
 	public void setLogEntry(LogEntry log) {
 		try {
 			credential = DescriptionStore.getInstance().getCredentialDescription(log.getCredential());
+			lblTitle.setText(String.format("<html>%s <a href=\"%d\">%s</a></html>", log.getAction() == Action.ISSUE ? "Issue" : "Verify", credential.getId(), credential.getName()));
+			lblTimestamp.setText(log.getTimestamp().toString());
+			DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0);
+			table.setModel(tableModel);
+			Attributes attributes = credentials.getAttributes(credential.getId());
+			for(AttributeDescription attribute : credential.getAttributes()) {
+				tableModel.addRow(new Object[]{attribute.getName(), new String(attributes.get(attribute.getName())), attribute.getDescription()});
+			}
 		} catch (InfoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		lblTitle.setText(String.format("<html>%s <a href=\"%d\">%s</a></html>", log.getAction() == Action.ISSUE ? "Issue" : "Verify", credential.getId(), credential.getName()));
-		lblTimestamp.setText(log.getTimestamp().toString());
-		DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0);
-		table.setModel(tableModel);
-		Attributes attributes = credentials.getAttributes(credential.getId());
-		for(String attribute : attributes.getIdentifiers()) {
-			tableModel.addRow(new Object[]{attribute, new String(attributes.get(attribute))});
 		}
 	}
 }
