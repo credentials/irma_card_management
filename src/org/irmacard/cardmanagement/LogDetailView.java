@@ -20,6 +20,7 @@ import org.irmacard.credentials.info.DescriptionStore;
 import org.irmacard.credentials.info.InfoException;
 import org.irmacard.credentials.util.LogEntry;
 import org.irmacard.credentials.util.LogEntry.Action;
+import java.awt.Color;
 
 public class LogDetailView extends JPanel {
 	private static final long serialVersionUID = 8260302052925451249L;
@@ -43,9 +44,9 @@ public class LogDetailView extends JPanel {
 		setLayout(springLayout);
 		
 		lblTitle = new JEditorPane();
+		lblTitle.setOpaque(false);
 		springLayout.putConstraint(SpringLayout.NORTH, lblTitle, 0, SpringLayout.NORTH, this);
 		springLayout.putConstraint(SpringLayout.WEST, lblTitle, 0, SpringLayout.WEST, this);
-		lblTitle.setBackground(SystemColor.control);
 		lblTitle.setContentType("text/html");
 		lblTitle.setEditable(false);
 		lblTitle.addHyperlinkListener(new HyperlinkListener() {
@@ -60,7 +61,7 @@ public class LogDetailView extends JPanel {
 		add(lblTitle);
 		
 		lblTimestamp = new JLabel();
-		springLayout.putConstraint(SpringLayout.NORTH, lblTimestamp, 0, SpringLayout.SOUTH, lblTitle);
+		springLayout.putConstraint(SpringLayout.NORTH, lblTimestamp, 6, SpringLayout.SOUTH, lblTitle);
 		springLayout.putConstraint(SpringLayout.WEST, lblTimestamp, 0, SpringLayout.WEST, this);
 		add(lblTimestamp);
 		
