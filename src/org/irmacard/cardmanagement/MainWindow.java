@@ -36,6 +36,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import net.sourceforge.scuba.smartcards.CardService;
+import javax.swing.border.BevelBorder;
+import javax.swing.ImageIcon;
+import java.awt.Toolkit;
+import java.awt.Font;
+import java.awt.Color;
 
 
 public class MainWindow implements CredentialSelector {
@@ -76,6 +81,7 @@ public class MainWindow implements CredentialSelector {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void initialize() {
 		frmCardManagement = new JFrame();
+		frmCardManagement.setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/img/irma.png")));
 		frmCardManagement.setTitle(BUNDLE.getString("MainWindow.frmCardManagement.title")); //$NON-NLS-1$
 		frmCardManagement.setBounds(100, 100, 690, 456);
 		frmCardManagement.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -85,22 +91,29 @@ public class MainWindow implements CredentialSelector {
 		toolBar.setFloatable(false);
 		frmCardManagement.getContentPane().add(toolBar, BorderLayout.NORTH);
 		
-		JButton btnChangePin = new JButton(BUNDLE.getString("MainWindow.btnChangePin.text")); //$NON-NLS-1$
+		JButton btnChangePin = new JButton("");
+		btnChangePin.setToolTipText(BUNDLE.getString("MainWindow.btnChangePin.toolTipText")); //$NON-NLS-1$
+		btnChangePin.setIcon(new ImageIcon(MainWindow.class.getResource("/img/changePin.png")));
 		toolBar.add(btnChangePin);
 		
 		splitPaneVert = new JSplitPane();
+		splitPaneVert.setBorder(null);
 		splitPaneVert.setResizeWeight(0.6);
 		splitPaneVert.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		frmCardManagement.getContentPane().add(splitPaneVert, BorderLayout.CENTER);
 		
 		JSplitPane splitPaneHoriz = new JSplitPane();
+		splitPaneHoriz.setBorder(null);
 		splitPaneHoriz.setResizeWeight(0.5);
 		splitPaneVert.setLeftComponent(splitPaneHoriz);
 		
 		JScrollPane scrollPaneLog = new JScrollPane();
+		scrollPaneLog.setBorder(null);
 		splitPaneHoriz.setRightComponent(scrollPaneLog);
 		
 		final JList listLog = new JList();
+		listLog.setFont(new Font("Ubuntu", Font.PLAIN, 11));
+		listLog.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		listLog.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent evt) {
 				if(!evt.getValueIsAdjusting()){
@@ -139,10 +152,17 @@ public class MainWindow implements CredentialSelector {
 			
 		});
 		
+		JLabel lblLog = new JLabel(BUNDLE.getString("MainWindow.lblLog.text")); //$NON-NLS-1$
+		lblLog.setForeground(new Color(0, 66, 137));
+		lblLog.setFont(new Font("Ubuntu", Font.BOLD, 12));
+		scrollPaneLog.setColumnHeaderView(lblLog);
+		
 		JScrollPane scrollPaneCredentials = new JScrollPane();
+		scrollPaneCredentials.setBorder(null);
 		splitPaneHoriz.setLeftComponent(scrollPaneCredentials);
 		
 		final JList listCredentials = new JList();
+		listCredentials.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		listCredentials.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent evt) {
 				selectCredentialIndex(listCredentials.getSelectedIndex());
@@ -182,7 +202,13 @@ public class MainWindow implements CredentialSelector {
 			}
 		});
 		
+		JLabel lblCredentials = new JLabel(BUNDLE.getString("MainWindow.lblCredentials.text")); //$NON-NLS-1$
+		lblCredentials.setForeground(new Color(0, 66, 137));
+		lblCredentials.setFont(new Font("Ubuntu", Font.BOLD, 12));
+		scrollPaneCredentials.setColumnHeaderView(lblCredentials);
+		
 		JLabel lblNothingSelected = new JLabel(BUNDLE.getString("MainWindow.lblNothinSelected.text"));
+		lblNothingSelected.setFont(new Font("Ubuntu", Font.PLAIN, 11));
 		splitPaneVert.setRightComponent(lblNothingSelected);
 		
 		logDetailView = new LogDetailView(baseCredentials, this);
