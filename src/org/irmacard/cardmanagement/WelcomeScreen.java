@@ -1,10 +1,13 @@
 package org.irmacard.cardmanagement;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
 
 import javax.smartcardio.CardException;
 import javax.smartcardio.CardNotPresentException;
@@ -13,11 +16,15 @@ import javax.smartcardio.TerminalFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.Action;
+import javax.swing.ButtonModel;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import org.irmacard.chvservice.CardHolderVerificationService;
 import org.irmacard.chvservice.IPinVerificationListener;
@@ -34,10 +41,14 @@ import net.sourceforge.scuba.smartcards.TerminalCardService;
 import net.sourceforge.scuba.smartcards.TerminalFactoryListener;
 
 import java.util.ResourceBundle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Color;
+import javax.swing.JButton;
 
 public class WelcomeScreen extends JFrame implements CardTerminalListener, TerminalFactoryListener, IPinVerificationListener {
 	private static final long serialVersionUID = -1120906824335303913L;
@@ -48,11 +59,28 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 
 	private CardManager manager;
 	private JLabel lblInfo;
+	private JButton btnClose;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (InstantiationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IllegalAccessException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -69,15 +97,17 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 	 * Create the frame.
 	 */
 	public WelcomeScreen() {
+		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 561, 306);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(0, 66, 137));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
 		JLabel lblIrmaLogo = new JLabel();
-		lblIrmaLogo.addMouseListener(new MouseAdapter() {
+		lblIrmaLogo.setBounds(5, 5, 558, 305);
+		/*lblIrmaLogo.addMouseListener(new MouseAdapter() {
 			//TODO: Temporary solution for not detecting card insertion
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -91,14 +121,28 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 					e.printStackTrace();
 				}
 			}
-		});
+		});*/
+		contentPane.setLayout(null);
 		lblIrmaLogo.setHorizontalAlignment(SwingConstants.CENTER);
-		lblIrmaLogo.setIcon(new ImageIcon(WelcomeScreen.class.getResource("/img/irma.png")));
-		contentPane.add(lblIrmaLogo, BorderLayout.CENTER);
+		lblIrmaLogo.setIcon(new ImageIcon(WelcomeScreen.class.getResource("/img/PlaceCard.png")));
+		contentPane.add(lblIrmaLogo);
 		
 		lblInfo = new JLabel(BUNDLE.getString("WelcomeScreen.lblInfo.placeCard")); //$NON-NLS-1$
+		lblInfo.setBounds(5, 547, 804, 14);
+		lblInfo.setVisible(false);
 		lblInfo.setHorizontalAlignment(SwingConstants.CENTER);
-		contentPane.add(lblInfo, BorderLayout.SOUTH);
+		contentPane.add(lblInfo);
+		
+		btnClose = new CloseButton();
+		btnClose.setLocation(530, 11);
+		btnClose.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				WindowEvent wev = new WindowEvent(WelcomeScreen.this, WindowEvent.WINDOW_CLOSING);
+                Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(wev);
+			}
+		});
+		contentPane.add(btnClose);
 		
 		manager = CardManager.getInstance();
 		manager.addTerminalFactoryListener(this);
@@ -127,8 +171,9 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 				pinResponse = chv.verifyPIN();
 			} while(pinResponse > 0 && pinResponse != CardHolderVerificationService.PIN_OK);
 			if(pinResponse == CardHolderVerificationService.PIN_OK) {
-				MainWindow mainWindow = new MainWindow(ce.getService());
-				mainWindow.show();
+				//MainWindow mainWindow = new MainWindow(ce.getService());
+				MainWindow2 mainWindow = new MainWindow2();
+				mainWindow.setVisible(true);
 				setVisible(false);
 			}
 			else {
@@ -215,5 +260,30 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 	@Override
 	public void pinPadPinEntered() {
 		lblInfo.setText(BUNDLE.getString("WelcomeScreen.lblInfo.placeCard"));
+	}
+	
+	private class CloseButton extends JButton {
+		private ImageIcon defaultIcon = new ImageIcon(WelcomeScreen.class.getResource("/img/closeButton/default.png"));
+		private ImageIcon hoverIcon = new ImageIcon(WelcomeScreen.class.getResource("/img/closeButton/hover.png"));
+		private ImageIcon pressIcon = new ImageIcon(WelcomeScreen.class.getResource("/img/closeButton/press.png"));
+		
+		public CloseButton() {
+			super();
+			setSize(defaultIcon.getIconWidth(), defaultIcon.getIconHeight());
+		}
+		
+		@Override
+		public void paint(Graphics g) {
+			ButtonModel model = getModel();
+			if(model.isArmed() || model.isPressed()) {
+				pressIcon.paintIcon(this, g, 0, 0);
+			}
+			else if(model.isRollover()) {
+				hoverIcon.paintIcon(this, g, 0, 0);
+			}
+			else {
+				defaultIcon.paintIcon(this, g, 0, 0);
+			}
+		}
 	}
 }
