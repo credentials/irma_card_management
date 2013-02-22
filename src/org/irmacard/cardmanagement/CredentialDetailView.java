@@ -1,24 +1,20 @@
 package org.irmacard.cardmanagement;
 
-import javax.swing.JPanel;
-import javax.swing.JLabel;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
+import java.util.ResourceBundle;
+
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SpringLayout;
+
 import org.irmacard.credentials.Attributes;
 import org.irmacard.credentials.info.AttributeDescription;
 import org.irmacard.credentials.info.CredentialDescription;
-import java.util.ResourceBundle;
-import java.awt.Color;
-import javax.swing.JButton;
-import javax.swing.ImageIcon;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.GridLayout;
-import javax.swing.BoxLayout;
-import java.awt.Component;
-import javax.swing.JScrollPane;
 
 public class CredentialDetailView extends JPanel {
 	private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("org.irmacard.cardmanagement.messages"); //$NON-NLS-1$

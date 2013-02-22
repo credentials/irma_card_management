@@ -1,54 +1,42 @@
 package org.irmacard.cardmanagement;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ResourceBundle;
 
-import javax.smartcardio.CardException;
-import javax.smartcardio.CardNotPresentException;
-import javax.smartcardio.CardTerminal;
-import javax.smartcardio.TerminalFactory;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.Action;
 import javax.swing.ButtonModel;
-import javax.swing.JLabel;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
-import org.irmacard.chvservice.CardHolderVerificationService;
-import org.irmacard.chvservice.IPinVerificationListener;
-
-import service.IdemixService;
+import javax.swing.border.EmptyBorder;
 
 import net.sourceforge.scuba.smartcards.CardEvent;
 import net.sourceforge.scuba.smartcards.CardManager;
-import net.sourceforge.scuba.smartcards.CardService;
 import net.sourceforge.scuba.smartcards.CardServiceException;
 import net.sourceforge.scuba.smartcards.CardTerminalEvent;
 import net.sourceforge.scuba.smartcards.CardTerminalListener;
 import net.sourceforge.scuba.smartcards.TerminalCardService;
 import net.sourceforge.scuba.smartcards.TerminalFactoryListener;
 
-import java.util.ResourceBundle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.Color;
-import javax.swing.JButton;
+import org.irmacard.chvservice.CardHolderVerificationService;
+import org.irmacard.chvservice.IPinVerificationListener;
+import org.irmacard.idemix.IdemixService;
 
 public class WelcomeScreen extends JFrame implements CardTerminalListener, TerminalFactoryListener, IPinVerificationListener {
 	private static final long serialVersionUID = -1120906824335303913L;
@@ -263,6 +251,7 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 	}
 	
 	private class CloseButton extends JButton {
+		private static final long serialVersionUID = 2887545853103440609L;
 		private ImageIcon defaultIcon = new ImageIcon(WelcomeScreen.class.getResource("/img/closeButton/default.png"));
 		private ImageIcon hoverIcon = new ImageIcon(WelcomeScreen.class.getResource("/img/closeButton/hover.png"));
 		private ImageIcon pressIcon = new ImageIcon(WelcomeScreen.class.getResource("/img/closeButton/press.png"));

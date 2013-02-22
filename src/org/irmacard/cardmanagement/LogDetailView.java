@@ -10,6 +10,8 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.table.DefaultTableModel;
 
+import net.sourceforge.scuba.smartcards.CardServiceException;
+
 import org.irmacard.credentials.Attributes;
 import org.irmacard.credentials.BaseCredentials;
 import org.irmacard.credentials.info.AttributeDescription;
@@ -85,12 +87,13 @@ public class LogDetailView extends JPanel {
 			lblTimestamp.setText(log.getTimestamp().toString());
 			DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0);
 			table.setModel(tableModel);
-			Attributes attributes = credentials.getAttributes(credential.getId());
+			Attributes attributes = credentials.getAttributes(credential);
 			for(AttributeDescription attribute : credential.getAttributes()) {
 				tableModel.addRow(new Object[]{attribute.getName(), new String(attributes.get(attribute.getName())), attribute.getDescription()});
 			}
 		} catch (InfoException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CardServiceException e) {
 			e.printStackTrace();
 		}
 	}

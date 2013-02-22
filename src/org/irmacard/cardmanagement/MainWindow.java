@@ -36,6 +36,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import net.sourceforge.scuba.smartcards.CardService;
+import net.sourceforge.scuba.smartcards.CardServiceException;
+
 import javax.swing.border.BevelBorder;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
@@ -78,7 +80,6 @@ public class MainWindow implements CredentialSelector {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void initialize() {
 		frmCardManagement = new JFrame();
 		frmCardManagement.setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/img/irma.png")));
@@ -180,16 +181,18 @@ public class MainWindow implements CredentialSelector {
 		listCredentials.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPaneCredentials.setViewportView(listCredentials);
 		credListModel = new DefaultListModel();
-		List<Integer> credentials = baseCredentials.getCredentials();
+		
 		try {
+			List<CredentialDescription> credentials = baseCredentials.getCredentials();
 			URI core = new File(System.getProperty("user.dir")).toURI().resolve("irma_configuration/");
 			DescriptionStore.setCoreLocation(core);
 			descriptions = DescriptionStore.getInstance();
-			for(Integer cred : credentials) {
-				credListModel.addElement(descriptions.getCredentialDescription(cred.shortValue()));
+			for(CredentialDescription cred : credentials) {
+				credListModel.addElement(cred);
 			}
+		} catch (CardServiceException e) {
+			e.printStackTrace();
 		} catch (InfoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		listCredentials.setModel(credListModel);
@@ -253,8 +256,12 @@ public class MainWindow implements CredentialSelector {
 	 * @param id
 	 */
 	public void selectCredential(CredentialDescription credential) {
-		credentialDetailView.setCredential(credential, baseCredentials.getAttributes(credential.getId()));
-		splitPaneVert.setRightComponent(credentialDetailView);
+		try {
+			credentialDetailView.setCredential(credential, baseCredentials.getAttributes(credential));
+			splitPaneVert.setRightComponent(credentialDetailView);
+		} catch (CardServiceException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void show() {

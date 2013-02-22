@@ -27,6 +27,9 @@ import java.awt.SystemColor;
 import java.awt.Frame;
 
 public class MainWindow2 extends JFrame implements ListSelectionListener {
+
+	private static final long serialVersionUID = 3280620387236869052L;
+
 	private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("org.irmacard.cardmanagement.messages"); //$NON-NLS-1$
 
 	private JPanel contentPane;

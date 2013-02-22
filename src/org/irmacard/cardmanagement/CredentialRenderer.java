@@ -5,20 +5,12 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
-import java.awt.Toolkit;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
@@ -37,6 +29,9 @@ public class CredentialRenderer implements ListCellRenderer {
 
 	
 	private class CredentialLabel extends JLabel{
+
+		private static final long serialVersionUID = -5932447452784481666L;
+
 		private boolean drawLock;
 		private ImageIcon lock = new ImageIcon(MainWindow2.class.getResource("/img/lock.png"));
 		

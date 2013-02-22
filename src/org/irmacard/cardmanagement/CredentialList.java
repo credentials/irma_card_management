@@ -1,19 +1,16 @@
 package org.irmacard.cardmanagement;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
+
 import org.irmacard.credentials.info.CredentialDescription;
 import org.irmacard.credentials.info.InfoException;
 
@@ -34,7 +31,6 @@ public class CredentialList extends JPanel {
 		try {
 			credential = new CredentialDescription((short) 0);
 		} catch (InfoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		CredentialButton btnCredential = new CredentialButton(credential, this);
@@ -42,7 +38,6 @@ public class CredentialList extends JPanel {
 		try {
 			credential = new CredentialDescription((short) 1);
 		} catch (InfoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		CredentialButton btnCredential2 = new CredentialButton(credential, this);

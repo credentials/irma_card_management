@@ -1,19 +1,21 @@
 package org.irmacard.cardmanagement;
 
-import javax.swing.JPanel;
-import javax.swing.SpringLayout;
-import javax.swing.JLabel;
-
-import org.irmacard.credentials.info.AttributeDescription;
 import java.awt.Color;
-import java.awt.Font;
-import javax.swing.BoxLayout;
-import javax.swing.Box;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import org.irmacard.credentials.info.AttributeDescription;
 
 public class AttributeView extends JPanel {
 
+	private static final long serialVersionUID = 583178842842027655L;
+	
 	private JLabel lblAttributeName;
 	private JLabel lblAttributeValue;
 	private JLabel lblAttributeDescription;
