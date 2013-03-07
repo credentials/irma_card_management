@@ -105,7 +105,7 @@ public class CredentialDetailView extends JPanel {
 		}
 		lblCredName.setText(credential.getName().toUpperCase());
 		lblCredDescription.setText(credential.getDescription());
-		lblIssuer.setText(credential.getIssuerName());
+		lblIssuer.setText(credential.getIssuerID());
 		attributesPanel.removeAll();
 		for(AttributeDescription attribute : credential.getAttributes()) {
 			AttributeView attributeView = new AttributeView();
