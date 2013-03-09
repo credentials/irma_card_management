@@ -15,6 +15,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JSplitPane;
 
 import org.irmacard.credentials.Attributes;
+import org.irmacard.credentials.info.AttributeDescription;
 import org.irmacard.credentials.info.CredentialDescription;
 import org.irmacard.credentials.info.InfoException;
 import java.awt.Font;
@@ -98,7 +99,9 @@ public class MainWindow2 extends JFrame implements ListSelectionListener {
 		
 		
 		Attributes attributes = new Attributes();
-		attributes.add("University", "Radboud University".getBytes());
+		attributes.add("University", "Radboud University Nijmegen".getBytes());
+		attributes.add("Student ID", "u921154".getBytes());
+		attributes.add("Student Card", "2300921154".getBytes());
 		try {
 			credentialDetailView.setCredential(new CredentialDescription((short)0), attributes);
 		} catch (InfoException e) {
@@ -131,7 +134,19 @@ public class MainWindow2 extends JFrame implements ListSelectionListener {
 	@Override
 	public void valueChanged(ListSelectionEvent event) {
 		Attributes attributes = new Attributes();
-		attributes.add("University", "Radboud University".getBytes());
+		if(list.getSelectedIndex() == 0) {
+			attributes.add("University", "Radboud University Nijmegen".getBytes());
+			attributes.add("Student ID", "u921154".getBytes());
+			attributes.add("Student Card", "2300921154".getBytes());
+		}
+		else if(list.getSelectedIndex() == 1) {
+			attributes.add("Over 16", "True".getBytes());
+			attributes.add("Over 18", "True".getBytes());
+			attributes.add("Over 21", "False".getBytes());
+		}
+		else if(list.getSelectedIndex() == 2) {
+			attributes.add("Nationality", "Nederlands".getBytes());
+		}
 		credentialDetailView.setCredential((CredentialDescription)list.getSelectedValue(), attributes);
 	}
 }
