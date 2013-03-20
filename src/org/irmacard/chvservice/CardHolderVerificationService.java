@@ -98,10 +98,19 @@ public class CardHolderVerificationService extends CardService {
 		return service.transmit(capdu);
 	}
 
+	public byte[] transmitControlCommand(int controlCode, byte[] command)
+	throws CardServiceException {
+		return service.transmitControlCommand(controlCode, command);
+	}
+
 	public void close() {
 		service.close();
 	}
 
+	public String getName() {
+		return "CardHolderVerification: " + service.getName();
+	}
+	
     public int verifyPIN() 
     throws CardServiceException {
         queryFeatures();
