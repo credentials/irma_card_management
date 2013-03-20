@@ -15,7 +15,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JSplitPane;
 
 import org.irmacard.credentials.Attributes;
-import org.irmacard.credentials.info.AttributeDescription;
 import org.irmacard.credentials.info.CredentialDescription;
 import org.irmacard.credentials.info.InfoException;
 import java.awt.Font;
