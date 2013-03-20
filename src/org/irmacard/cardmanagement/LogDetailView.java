@@ -16,10 +16,10 @@ import org.irmacard.credentials.Attributes;
 import org.irmacard.credentials.BaseCredentials;
 import org.irmacard.credentials.info.AttributeDescription;
 import org.irmacard.credentials.info.CredentialDescription;
-import org.irmacard.credentials.info.DescriptionStore;
-import org.irmacard.credentials.info.InfoException;
-import org.irmacard.credentials.util.LogEntry;
-import org.irmacard.credentials.util.LogEntry.Action;
+import org.irmacard.credentials.util.log.IssueLogEntry;
+import org.irmacard.credentials.util.log.LogEntry;
+import org.irmacard.credentials.util.log.RemoveLogEntry;
+import org.irmacard.credentials.util.log.VerifyLogEntry;
 
 public class LogDetailView extends JPanel {
 	private static final long serialVersionUID = 8260302052925451249L;
@@ -82,8 +82,17 @@ public class LogDetailView extends JPanel {
 	
 	public void setLogEntry(LogEntry log) {
 		try {
-			credential = DescriptionStore.getInstance().getCredentialDescription(log.getCredential());
-			lblTitle.setText(String.format("<html>%s <a href=\"%d\">%s</a></html>", log.getAction() == Action.ISSUE ? "Issue" : "Verify", credential.getId(), credential.getName()));
+			credential = log.getCredential();
+			String action = "";
+			if (log instanceof IssueLogEntry) {
+				action = "Issue";
+			} else if (log instanceof VerifyLogEntry) {
+				action = "Verify";
+			} else if (log instanceof RemoveLogEntry) {
+				action = "Remove";
+			}
+			lblTitle.setText(String.format("<html>%s <a href=\"%d\">%s</a></html>", action, credential.getId(), credential.getName()));
+			
 			lblTimestamp.setText(log.getTimestamp().toString());
 			DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0);
 			table.setModel(tableModel);
@@ -91,8 +100,8 @@ public class LogDetailView extends JPanel {
 			for(AttributeDescription attribute : credential.getAttributes()) {
 				tableModel.addRow(new Object[]{attribute.getName(), new String(attributes.get(attribute.getName())), attribute.getDescription()});
 			}
-		} catch (InfoException e) {
-			e.printStackTrace();
+//		} catch (InfoException e) {
+//			e.printStackTrace();
 		} catch (CardServiceException e) {
 			e.printStackTrace();
 		}

@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.io.IOException;
 
@@ -19,6 +20,12 @@ import org.irmacard.credentials.info.CredentialDescription;
 
 public class CredentialRenderer implements ListCellRenderer {
 
+	private static final ImageIcon badge = new ImageIcon(MainWindow2.class.getResource("/img/badge.png"));
+	private static final ImageIcon shadeLeft = new ImageIcon(MainWindow2.class.getResource("/img/shade_left.png"));
+	private static final ImageIcon shadeMiddle = new ImageIcon(MainWindow2.class.getResource("/img/shade_middle.png"));
+	private static final ImageIcon shadeRight = new ImageIcon(MainWindow2.class.getResource("/img/shade_right.png"));
+	private static final ImageIcon lock = new ImageIcon(MainWindow2.class.getResource("/img/lock.png"));
+	
 	@Override
 	public Component getListCellRendererComponent(JList list, Object value, int index,
     boolean isSelected, boolean cellHasFocus) {
@@ -31,17 +38,15 @@ public class CredentialRenderer implements ListCellRenderer {
 	private class CredentialLabel extends JLabel{
 
 		private static final long serialVersionUID = -5932447452784481666L;
-
+		
 		private boolean drawLock;
-		private ImageIcon lock = new ImageIcon(MainWindow2.class.getResource("/img/lock.png"));
+		private boolean isSelected;
+		
 		
 		public CredentialLabel(CredentialDescription value, boolean isSelected) {
-			String shade = "";
-			if(isSelected) {
-				shade = "_noshade";
-			}
-			setIcon(new ImageIcon(MainWindow2.class.getResource("/img/badge" + shade + ".png")));
+			
 			setText(value.getName());
+			this.isSelected = isSelected;
 			if(isSelected) {
 				setBackground(new Color(0, 66, 137));
 			}
@@ -59,7 +64,14 @@ public class CredentialRenderer implements ListCellRenderer {
 			g.setColor(getBackground());
 			g.fillRect(0, 0, getWidth(), getHeight());
 			
-			getIcon().paintIcon(this, g, 0, 0);
+			if(!isSelected) {
+				shadeLeft.paintIcon(this, g, 0, 0);
+				g.drawImage(shadeMiddle.getImage(), shadeLeft.getIconWidth(), 0, getWidth() - shadeLeft.getIconWidth() - shadeRight.getIconWidth(), shadeMiddle.getIconHeight(), null);
+				shadeRight.paintIcon(this, g, getWidth() - shadeRight.getIconWidth(), 0);
+			}
+			g.setColor(Color.white);
+			g.fillRoundRect(18, 16, getWidth() - 20, getHeight() - 19, 10, 10);
+			badge.paintIcon(this, g, 1, 1);
 			
 			try {
 				Font ubuntuBold = Font.createFont(Font.TRUETYPE_FONT, MainWindow2.class.getResourceAsStream("/fonts/Ubuntu-B.ttf"));
@@ -76,13 +88,13 @@ public class CredentialRenderer implements ListCellRenderer {
 			}
 			
 			if(drawLock) {
-				lock.paintIcon(this, g, 175, 20);
+				lock.paintIcon(this, g, getWidth() - 25, 20);
 			}
 		}
 		
 		@Override
 		public Dimension getPreferredSize() {
-			return new Dimension(getIcon().getIconWidth(), getIcon().getIconHeight());
+			return new Dimension(200, 65);
 		}
 		
 		@Override

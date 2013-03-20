@@ -20,12 +20,14 @@ import javax.swing.JLabel;
 
 import javax.swing.ListCellRenderer;
 
-import org.irmacard.credentials.util.LogEntry;
-import org.irmacard.credentials.util.LogEntry.Action;
 import org.irmacard.credentials.idemix.IdemixCredentials;
 import org.irmacard.credentials.info.CredentialDescription;
 import org.irmacard.credentials.info.DescriptionStore;
 import org.irmacard.credentials.info.InfoException;
+import org.irmacard.credentials.util.log.IssueLogEntry;
+import org.irmacard.credentials.util.log.LogEntry;
+import org.irmacard.credentials.util.log.RemoveLogEntry;
+import org.irmacard.credentials.util.log.VerifyLogEntry;
 import org.irmacard.credentials.BaseCredentials;
 
 import javax.swing.JList;
@@ -65,8 +67,6 @@ public class MainWindow implements CredentialSelector {
 	private JSplitPane splitPaneVert;
 
 	private DefaultListModel logListModel;
-
-	private DescriptionStore descriptions;
 
 	/**
 	 * Create the application.
@@ -134,7 +134,16 @@ public class MainWindow implements CredentialSelector {
 		listLog.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPaneLog.setViewportView(listLog);
 		logListModel = new DefaultListModel();
-		List<LogEntry> logEntries = baseCredentials.getLog();
+		List<LogEntry> logEntries = null;
+		try {
+			logEntries = baseCredentials.getLog();
+		} catch (CardServiceException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (InfoException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		for(LogEntry entry : logEntries) {
 			logListModel.addElement(entry);
 		}
@@ -145,8 +154,16 @@ public class MainWindow implements CredentialSelector {
 			public Component getListCellRendererComponent(JList list,
 					Object value, int index, boolean isSelected, boolean cellHasFocus) {
 				LogEntry entry = (LogEntry)value;
-				CredentialDescription credential = descriptions.getCredentialDescription(entry.getCredential());
-				String string = entry.getTimestamp().toString() + ": " + (entry.getAction() == Action.ISSUE ? "Issue " : "Verify ") + credential.getName(); 
+				CredentialDescription credential = entry.getCredential();
+				String action = "";
+				if (entry instanceof IssueLogEntry) {
+					action = "Issue";
+				} else if (entry instanceof VerifyLogEntry) {
+					action = "Verify";
+				} else if (entry instanceof RemoveLogEntry) {
+					action = "Remove";
+				}
+				String string = entry.getTimestamp().toString() + ": " + action + credential.getName(); 
 				
 				return renderCell(string, isSelected, list);
 			}
@@ -186,7 +203,6 @@ public class MainWindow implements CredentialSelector {
 			List<CredentialDescription> credentials = baseCredentials.getCredentials();
 			URI core = new File(System.getProperty("user.dir")).toURI().resolve("irma_configuration/");
 			DescriptionStore.setCoreLocation(core);
-			descriptions = DescriptionStore.getInstance();
 			for(CredentialDescription cred : credentials) {
 				credListModel.addElement(cred);
 			}
@@ -246,7 +262,6 @@ public class MainWindow implements CredentialSelector {
 	 * @param index
 	 */
 	private void selectCredentialIndex(int index) {
-		//short id = ((Integer)credListModel.getElementAt(index)).shortValue();
 		CredentialDescription credential = (CredentialDescription)credListModel.getElementAt(index);
 		selectCredential(credential);
 	}
