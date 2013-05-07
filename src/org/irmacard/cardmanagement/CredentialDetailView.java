@@ -108,10 +108,16 @@ public class CredentialDetailView extends JPanel {
 		lblIssuer.setText(credential.getIssuerID());
 		attributesPanel.removeAll();
 		for(AttributeDescription attribute : credential.getAttributes()) {
-			AttributeView attributeView = new AttributeView();
-			attributeView.setAttribute(attribute, new String(attributes.get(attribute.getName())));
-			attributeView.setAlignmentX(Component.LEFT_ALIGNMENT);
-			attributesPanel.add(attributeView);
+			byte[] value = attributes.get(attribute.getName());
+			if(value != null) {
+				AttributeView attributeView = new AttributeView();
+				attributeView.setAttribute(attribute, new String());
+				attributeView.setAlignmentX(Component.LEFT_ALIGNMENT);
+				attributesPanel.add(attributeView);
+			}
+			else {
+				System.out.println("Attribute " + attribute.getName() + " not found.");
+			}
 		}
 	}
 }

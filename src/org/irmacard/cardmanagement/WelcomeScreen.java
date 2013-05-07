@@ -49,6 +49,8 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 	private JLabel lblInfo;
 	private JButton btnClose;
 
+	private MainWindow mainWindow;
+
 	/**
 	 * Launch the application.
 	 */
@@ -156,11 +158,11 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 			chv.addPinVerificationListener(this); 
 			int pinResponse;
 			do {
-				pinResponse = chv.verifyPIN();
-			} while(pinResponse > 0 && pinResponse != CardHolderVerificationService.PIN_OK);
-			if(pinResponse == CardHolderVerificationService.PIN_OK) {
-				//MainWindow mainWindow = new MainWindow(ce.getService());
-				MainWindow mainWindow = new MainWindow();
+				//pinResponse = chv.verifyPIN();
+				pinResponse = idemix.sendCardPin(new byte[]{0x30, 0x30, 0x30, 0x30, 0x30, 0x30});
+			} while(pinResponse > 0 && pinResponse != -1);//CardHolderVerificationService.PIN_OK);
+			if(pinResponse == -1) {//CardHolderVerificationService.PIN_OK) {
+				mainWindow = new MainWindow(ce.getService());
 				mainWindow.setVisible(true);
 				setVisible(false);
 			}
@@ -179,6 +181,7 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 
 	public void cardRemoved(CardEvent ce) {
 		System.out.println("Card removed");
+		showWelcomeScreen();
 	}
 
 	public void cardTerminalAdded(CardTerminalEvent cte) {
@@ -187,6 +190,15 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 
 	public void cardTerminalRemoved(CardTerminalEvent cte) {
 		System.out.println("Terminal removed");
+		showWelcomeScreen();
+	}
+	
+	private void showWelcomeScreen() {
+		if(mainWindow != null) {
+			mainWindow.dispose();
+			setVisible(true);
+		}
+		
 	}
 
 	@Override

@@ -14,6 +14,11 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.JTabbedPane;
 import javax.swing.JSplitPane;
 
+import net.sourceforge.scuba.smartcards.CardManager;
+import net.sourceforge.scuba.smartcards.CardService;
+import net.sourceforge.scuba.smartcards.CardTerminalListener;
+import net.sourceforge.scuba.smartcards.TerminalFactoryListener;
+
 import org.irmacard.credentials.Attributes;
 import org.irmacard.credentials.info.CredentialDescription;
 import org.irmacard.credentials.info.InfoException;
@@ -39,43 +44,17 @@ public class MainWindow extends JFrame implements ListSelectionListener {
 	private CredentialDetailView credentialDetailView;
 
 	private JList list;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InstantiationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IllegalAccessException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainWindow frame = new MainWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
+	private CardService cardService;
 
 	/**
 	 * Create the frame.
+	 * @param manager 
+	 * @param cardService 
 	 */
-	public MainWindow() {
+	public MainWindow(CardService cardService) {
+		this.cardService = cardService;
+		
 		setExtendedState(Frame.MAXIMIZED_BOTH);
 		setTitle(BUNDLE.getString("MainWindow.frmCardManagement.title")); //$NON-NLS-1$
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/img/irma.png")));
