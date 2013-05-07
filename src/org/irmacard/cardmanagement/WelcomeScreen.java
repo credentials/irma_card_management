@@ -160,7 +160,7 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 			} while(pinResponse > 0 && pinResponse != CardHolderVerificationService.PIN_OK);
 			if(pinResponse == CardHolderVerificationService.PIN_OK) {
 				//MainWindow mainWindow = new MainWindow(ce.getService());
-				MainWindow2 mainWindow = new MainWindow2();
+				MainWindow mainWindow = new MainWindow();
 				mainWindow.setVisible(true);
 				setVisible(false);
 			}

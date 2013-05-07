@@ -19,11 +19,11 @@ import org.irmacard.credentials.info.CredentialDescription;
 
 public class CredentialRenderer implements ListCellRenderer {
 
-	private static final ImageIcon badge = new ImageIcon(MainWindow2.class.getResource("/img/badge.png"));
-	private static final ImageIcon shadeLeft = new ImageIcon(MainWindow2.class.getResource("/img/shade_left.png"));
-	private static final ImageIcon shadeMiddle = new ImageIcon(MainWindow2.class.getResource("/img/shade_middle.png"));
-	private static final ImageIcon shadeRight = new ImageIcon(MainWindow2.class.getResource("/img/shade_right.png"));
-	private static final ImageIcon lock = new ImageIcon(MainWindow2.class.getResource("/img/lock.png"));
+	private static final ImageIcon badge = new ImageIcon(MainWindow.class.getResource("/img/badge.png"));
+	private static final ImageIcon shadeLeft = new ImageIcon(MainWindow.class.getResource("/img/shade_left.png"));
+	private static final ImageIcon shadeMiddle = new ImageIcon(MainWindow.class.getResource("/img/shade_middle.png"));
+	private static final ImageIcon shadeRight = new ImageIcon(MainWindow.class.getResource("/img/shade_right.png"));
+	private static final ImageIcon lock = new ImageIcon(MainWindow.class.getResource("/img/lock.png"));
 	
 	@Override
 	public Component getListCellRendererComponent(JList list, Object value, int index,
@@ -73,7 +73,7 @@ public class CredentialRenderer implements ListCellRenderer {
 			badge.paintIcon(this, g, 1, 1);
 			
 			try {
-				Font ubuntuBold = Font.createFont(Font.TRUETYPE_FONT, MainWindow2.class.getResourceAsStream("/fonts/Ubuntu-B.ttf"));
+				Font ubuntuBold = Font.createFont(Font.TRUETYPE_FONT, MainWindow.class.getResourceAsStream("/fonts/Ubuntu-B.ttf"));
 				ubuntuBold = ubuntuBold.deriveFont(14.0f);
 				g.setFont(ubuntuBold);
 				g.setColor(new Color(0, 66, 137));
