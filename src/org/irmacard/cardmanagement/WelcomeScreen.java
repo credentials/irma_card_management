@@ -159,6 +159,7 @@ public class WelcomeScreen extends JFrame implements CardTerminalListener, Termi
 			int pinResponse;
 			do {
 				//pinResponse = chv.verifyPIN();
+				//TODO: ask for pin
 				pinResponse = idemix.sendCardPin(new byte[]{0x30, 0x30, 0x30, 0x30, 0x30, 0x30});
 			} while(pinResponse > 0 && pinResponse != -1);//CardHolderVerificationService.PIN_OK);
 			if(pinResponse == -1) {//CardHolderVerificationService.PIN_OK) {

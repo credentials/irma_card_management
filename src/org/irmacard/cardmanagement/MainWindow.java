@@ -16,15 +16,21 @@ import javax.swing.JSplitPane;
 
 import net.sourceforge.scuba.smartcards.CardManager;
 import net.sourceforge.scuba.smartcards.CardService;
+import net.sourceforge.scuba.smartcards.CardServiceException;
 import net.sourceforge.scuba.smartcards.CardTerminalListener;
 import net.sourceforge.scuba.smartcards.TerminalFactoryListener;
 
 import org.irmacard.credentials.Attributes;
+import org.irmacard.credentials.CredentialsException;
+import org.irmacard.credentials.idemix.IdemixCredentials;
 import org.irmacard.credentials.info.CredentialDescription;
 import org.irmacard.credentials.info.InfoException;
+import org.irmacard.idemix.IdemixService;
+
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Toolkit;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
@@ -76,7 +82,7 @@ public class MainWindow extends JFrame implements ListSelectionListener {
 		credentialDetailView = new CredentialDetailView();
 		
 		
-		Attributes attributes = new Attributes();
+		/*Attributes attributes = new Attributes();
 		attributes.add("University", "Radboud University Nijmegen".getBytes());
 		attributes.add("Student ID", "u921154".getBytes());
 		attributes.add("Student Card", "2300921154".getBytes());
@@ -85,21 +91,21 @@ public class MainWindow extends JFrame implements ListSelectionListener {
 		} catch (InfoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		credentialsTab.setRightComponent(credentialDetailView);
 		
 		list = new JList();
 		list.setBackground(SystemColor.control);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		credentialListModel = new DefaultListModel();
-		try {
+		/*try {
 			credentialListModel.addElement(new CredentialDescription((short)0));
 			credentialListModel.addElement(new CredentialDescription((short)1));
 			credentialListModel.addElement(new CredentialDescription((short)2));
 		} catch (InfoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		list.setCellRenderer(new CredentialRenderer());
 		list.setModel(credentialListModel);
 		list.addListSelectionListener(this);
@@ -107,6 +113,28 @@ public class MainWindow extends JFrame implements ListSelectionListener {
 		
 		JSplitPane logTab = new JSplitPane();
 		tabbedPane.addTab("Log", null, logTab, null);
+		
+		loadCredentials();
+	}
+
+	private void loadCredentials() {
+		IdemixCredentials ic = new IdemixCredentials(cardService);
+		try {
+			ic.connect();
+			List<CredentialDescription> credentials = ic.getCredentials();
+			for(CredentialDescription cred : credentials) {
+				credentialListModel.addElement(cred);
+			}
+		} catch (CardServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InfoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CredentialsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
