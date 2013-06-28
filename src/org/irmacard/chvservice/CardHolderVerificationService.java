@@ -143,7 +143,8 @@ public class CardHolderVerificationService extends CardService {
         return processPinResponse(r.getSW());
     }
 
-    private int verifyPinUsingPinpad() 
+    @SuppressWarnings("unused")
+	private int verifyPinUsingPinpad() 
     throws CardServiceException {
         try {
             setUpReader();

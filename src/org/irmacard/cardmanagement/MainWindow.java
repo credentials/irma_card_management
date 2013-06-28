@@ -1,35 +1,29 @@
 package org.irmacard.cardmanagement;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.SystemColor;
+import java.awt.Toolkit;
+import java.util.ResourceBundle;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.JTabbedPane;
-import javax.swing.JSplitPane;
 
-import net.sourceforge.scuba.smartcards.CardManager;
 import net.sourceforge.scuba.smartcards.CardService;
-import net.sourceforge.scuba.smartcards.CardTerminalListener;
-import net.sourceforge.scuba.smartcards.TerminalFactoryListener;
 
 import org.irmacard.credentials.Attributes;
 import org.irmacard.credentials.info.CredentialDescription;
 import org.irmacard.credentials.info.InfoException;
-import java.awt.Font;
-import java.awt.Color;
-import java.awt.Toolkit;
-import java.util.ResourceBundle;
-import javax.swing.JList;
-import javax.swing.ListSelectionModel;
-import java.awt.SystemColor;
-import java.awt.Frame;
 
 public class MainWindow extends JFrame implements ListSelectionListener {
 
