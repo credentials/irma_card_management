@@ -27,21 +27,22 @@ public class CredentialList extends JPanel {
 		//setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setLayout(new FlowLayout());
 		
-		CredentialDescription credential = null;
-		try {
-			credential = new CredentialDescription((short) 0);
-		} catch (InfoException e) {
-			e.printStackTrace();
-		}
-		CredentialButton btnCredential = new CredentialButton(credential, this);
-		add(btnCredential);
-		try {
-			credential = new CredentialDescription((short) 1);
-		} catch (InfoException e) {
-			e.printStackTrace();
-		}
-		CredentialButton btnCredential2 = new CredentialButton(credential, this);
-		add(btnCredential2);
+		// FIXME: fill the list with buttons
+//		CredentialDescription credential = null;
+//		try {
+//			credential = new CredentialDescription((short) 0);
+//		} catch (InfoException e) {
+//			e.printStackTrace();
+//		}
+//		CredentialButton btnCredential = new CredentialButton(credential, this);
+//		add(btnCredential);
+//		try {
+//			credential = new CredentialDescription((short) 1);
+//		} catch (InfoException e) {
+//			e.printStackTrace();
+//		}
+//		CredentialButton btnCredential2 = new CredentialButton(credential, this);
+//		add(btnCredential2);
 
 	}
 	
